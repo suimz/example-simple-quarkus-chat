@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+group 'com.suimz'
+version '1.0.0-SNAPSHOT'
+description 'Quarkus 上手实践示例项目<https://suimz.com>'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    // 阿里仓库镜像, 国内用户加速依赖下载
+//    maven {
+//        url 'https://maven.aliyun.com/repository/public/'
+//    }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    // json序列化，含web依赖
+    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    // 参数校验
+    implementation 'io.quarkus:quarkus-hibernate-validator'
+    // jwt 认证
+    implementation 'io.quarkus:quarkus-smallrye-jwt'
+    // 数据库驱动 - MySQL
+    implementation 'io.quarkus:quarkus-jdbc-mysql'
+    // 数据库驱动 - H2
+    implementation 'io.quarkus:quarkus-jdbc-h2'
+    // 数据库操作
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+    // 加密相关 -> BcryptUtil.class
+    implementation 'io.quarkus:quarkus-elytron-security-common'
+    // 请求外部接口的依赖，用于调用 OpenAI API
+    implementation("io.quarkus:quarkus-rest-client-reactive")
+    implementation("io.quarkus:quarkus-rest-client-reactive-jackson")
+
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+test {
+    systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
